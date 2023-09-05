@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    
+    cloud_trace_http_kernel:
+        class: App\Kernel\HttpKernelTracer
+        decorates: http_kernel
