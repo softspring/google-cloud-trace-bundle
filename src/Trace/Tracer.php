@@ -106,10 +106,11 @@ class Tracer
         return self::createSpan($eventName ?? get_class($event), $attributes);
     }
 
-    public static function createKernelSpan(string $name, Request $request = null, int $type = null): ?Span
+    public static function createKernelSpan(string $name, Request $request = null, ?Response $response = null): ?Span
     {
         $attributes = [];
         $request && $attributes = array_merge($attributes, self::getRequestAttributes($request));
+        $response && $attributes = array_merge($attributes, self::getResponseAttributes($response));
 
         return self::createSpan($name, $attributes);
     }
