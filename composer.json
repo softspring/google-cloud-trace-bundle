@@ -1,7 +1,7 @@
 {
-    "name": "softspring/component-template",
-    "description": "This is a template for creating new components",
-    "type": "library",
+    "name": "softspring/google-cloud-trace-bundle",
+    "description": "This bundle",
+    "type": "symfony-bundle",
     "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Softspring\\Component\\Template\\": "src"
+            "Softspring\\GoogleCloudTraceBundle\\": "src"
         }
     },
     "config": {

@@ -1,13 +1,13 @@
-# Template component
+# Google Cloud Trace Bundle
 
-[![Latest Stable Version](https://poser.pugx.org/softspring/component-template/v/stable.svg)](https://packagist.org/packages/softspring/component-template)
-[![Latest Unstable Version](https://poser.pugx.org/softspring/component-template/v/unstable.svg)](https://packagist.org/packages/softspring/component-template)
-[![License](https://poser.pugx.org/softspring/component-template/license.svg)](https://packagist.org/packages/softspring/component-template)
-[![PHP Version Require](http://poser.pugx.org/softspring/component-template/require/php)](https://packagist.org/packages/softspring/component-template)
-[![Total Downloads](https://poser.pugx.org/softspring/component-template/downloads)](https://packagist.org/packages/softspring/component-template)
-[![Build status](https://github.com/softspring/component-template/actions/workflows/php.yml/badge.svg?branch=5.1)](https://github.com/softspring/component-template/actions/workflows/php.yml)
+[![Latest Stable Version](https://poser.pugx.org/softspring/google-cloud-trace-bundle/v/stable.svg)](https://packagist.org/packages/softspring/google-cloud-trace-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/softspring/google-cloud-trace-bundle/v/unstable.svg)](https://packagist.org/packages/softspring/google-cloud-trace-bundle)
+[![License](https://poser.pugx.org/softspring/google-cloud-trace-bundle/license.svg)](https://packagist.org/packages/softspring/google-cloud-trace-bundle)
+[![PHP Version Require](http://poser.pugx.org/softspring/google-cloud-trace-bundle/require/php)](https://packagist.org/packages/softspring/google-cloud-trace-bundle)
+[![Total Downloads](https://poser.pugx.org/softspring/google-cloud-trace-bundle/downloads)](https://packagist.org/packages/softspring/google-cloud-trace-bundle)
+[![Build status](https://github.com/softspring/google-cloud-trace-bundle/actions/workflows/php.yml/badge.svg?branch=5.1)](https://github.com/softspring/google-cloud-trace-bundle/actions/workflows/php.yml)
 
-This is the description of the component.
+This bundle integrates [Google Cloud Trace](https://cloud.google.com/trace) with Symfony.
 
 ## License
 
