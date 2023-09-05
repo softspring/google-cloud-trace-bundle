@@ -20,11 +20,11 @@ class HttpKernelTracer implements HttpKernelInterface, TerminableInterface
 
     public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
-        HttpKernelInterface::MAIN_REQUEST !== $type && Tracer::start($requestSpan = Tracer::createKernelSpan($request->getPathInfo(), $request));
+        Tracer::start($requestSpan = Tracer::createKernelSpan($request->getPathInfo(), $request));
         Tracer::start($handleSpan = Tracer::createKernelSpan('kernel.handle', $request));
         $response = $this->kernel->handle($request, $type, $catch);
         Tracer::stop($handleSpan);
-        !empty($requestSpan) && Tracer::stop($requestSpan);
+        Tracer::stop($requestSpan);
 
         return $response;
     }

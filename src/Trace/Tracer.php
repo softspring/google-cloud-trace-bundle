@@ -166,10 +166,19 @@ class Tracer
             $contentLength = \strlen($response->getContent());
         }
 
-        return [
+        $attributes = [
             '/http/status_code' => $response->getStatusCode(),
             '/http/flavour' => $response->getProtocolVersion(),
             '/http/response_content_length' => $contentLength,
         ];
+
+        $response->getExpires() && $attributes['/response/expires'] = $response->getExpires()->format('Y-m-d H:i:s');
+        $response->getDate() && $attributes['/response/date'] = $response->getDate()->format('Y-m-d H:i:s');
+        $response->getLastModified() && $attributes['/response/last_modified'] = $response->getLastModified()->format('Y-m-d H:i:s');
+        $response->getTtl() && $attributes['/response/ttl'] = $response->getExpires()->format('Y-m-d H:i:s');
+        $response->headers->hasCacheControlDirective('max-age') && $attributes['/response/max_age'] = $response->headers->getCacheControlDirective('max-age');
+        $response->headers->hasCacheControlDirective('s-maxage') && $attributes['/response/s_maxage'] = $response->headers->getCacheControlDirective('s-maxage');
+
+        return $attributes;
     }
 }
