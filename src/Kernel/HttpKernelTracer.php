@@ -1,0 +1,38 @@
+<?php
+
+namespace Softspring\GoogleCloudTraceBundle\Kernel;
+
+use Softspring\GoogleCloudTraceBundle\Trace\Tracer;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
+
+class HttpKernelTracer implements HttpKernelInterface, TerminableInterface
+{
+    protected HttpKernel $kernel;
+
+    public function __construct(HttpKernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
+    {
+        HttpKernelInterface::MAIN_REQUEST !== $type && Tracer::start($requestSpan = Tracer::createKernelSpan($request->getPathInfo(), $request, $type));
+        Tracer::start($handleSpan = Tracer::createKernelSpan('kernel.handle', $request, $type));
+        $response = $this->kernel->handle($request, $type, $catch);
+        Tracer::stop($handleSpan);
+        !empty($requestSpan) && Tracer::stop($requestSpan);
+
+        return $response;
+    }
+
+    public function terminate(Request $request, Response $response): void
+    {
+        Tracer::start($span = Tracer::createKernelSpan('kernel.terminate', $request));
+        $this->kernel->terminate($request, $response);
+        Tracer::stop($span);
+    }
+}
