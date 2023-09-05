@@ -4,5 +4,5 @@ services:
         autoconfigure: true
             
     cloud_trace_event_dispatcher:
-        class: App\EventDispatcher\CloudTraceEventDispatcher
+        class: Softspring\GoogleCloudTraceBundle\EventDispatcher\CloudTraceEventDispatcher
         decorates: event_dispatcher

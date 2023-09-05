@@ -2,8 +2,8 @@
 
 namespace Softspring\GoogleCloudTraceBundle;
 
-use App\Trace\Tracer;
 use Google\Cloud\Trace\Span;
+use Softspring\GoogleCloudTraceBundle\Trace\Tracer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
