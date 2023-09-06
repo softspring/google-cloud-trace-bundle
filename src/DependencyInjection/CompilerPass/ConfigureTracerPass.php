@@ -43,10 +43,10 @@ class ConfigureTracerPass implements CompilerPassInterface
                 $queryTracerLogger->setAutowired(true);
                 $container->setDefinition('sfs_gcloud_tracer.doctrine.dbal.logger', $queryTracerLogger);
 
-                $chainLogger = $container->getDefinition('doctrine.dbal.logger.chain');
-                $loggers = $chainLogger->getArgument(0);
-                $loggers[] = $queryTracerLogger;
-                $chainLogger->setArgument(0, $loggers);
+//                $chainLogger = $container->getDefinition('doctrine.dbal.logger.chain');
+//                $loggers = $chainLogger->getArgument(0);
+//                $loggers[] = $queryTracerLogger;
+//                $chainLogger->setArgument(0, $loggers);
             }
         }
     }
