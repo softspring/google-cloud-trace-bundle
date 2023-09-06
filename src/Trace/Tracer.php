@@ -78,7 +78,7 @@ class Tracer
         self::$trace = self::$traceClient->trace($traceId);
     }
 
-    public static function createSpan(string $name, array $attributes): ?Span
+    public static function createSpan(string $name, array $attributes = []): ?Span
     {
         self::initTrace();
 

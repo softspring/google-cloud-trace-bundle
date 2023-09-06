@@ -1,8 +1,0 @@
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-    
-    cloud_trace_http_kernel:
-        class: Softspring\GoogleCloudTraceBundle\Kernel\HttpKernelTracer
-        decorates: http_kernel

@@ -6,7 +6,7 @@ use Softspring\GoogleCloudTraceBundle\Trace\Tracer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CloudTraceEventDispatcher implements EventDispatcherInterface
+class EventDispatcherTracerDecorator implements EventDispatcherInterface
 {
     protected EventDispatcherInterface $eventDispatcher;
 

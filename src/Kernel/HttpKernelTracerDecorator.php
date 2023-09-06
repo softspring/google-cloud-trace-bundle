@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
-class HttpKernelTracer implements HttpKernelInterface, TerminableInterface
+class HttpKernelTracerDecorator implements HttpKernelInterface, TerminableInterface
 {
     protected HttpKernel $kernel;
 
