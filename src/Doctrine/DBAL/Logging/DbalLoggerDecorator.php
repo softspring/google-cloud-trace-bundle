@@ -19,6 +19,9 @@ class DbalLoggerDecorator implements SQLLogger
 
     public function startQuery($sql, array $params = null, array $types = null): void
     {
+        // stop if there is a previous span without stop
+        $this->span && Tracer::stop($this->span);
+
         $this->span = Tracer::createSpan('doctrine.query', ['sql' => $sql]);
         Tracer::start($this->span);
 
