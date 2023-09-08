@@ -17,7 +17,8 @@ class EnvironmentTracer extends Environment
      */
     public function render($name, array $context = []): string
     {
-        Tracer::start($span = Tracer::createSpan('twig.render', ['template' => $name]));
+        Tracer::start($span = Tracer::createSpan($name));
+        //        Tracer::start($span = Tracer::createSpan('twig.render', ['template' => $name]));
         $render = parent::render($name, $context);
         Tracer::stop($span);
 
