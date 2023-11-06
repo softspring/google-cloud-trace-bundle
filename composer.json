@@ -4,7 +4,7 @@
     "type": "symfony-bundle",
     "license": "MIT",
     "minimum-stability": "dev",
-    "prefer-stable": true,
+    "prefer-stable": false,
     "require": {
         "php": ">=8.0",
         "google/cloud-trace": "^1.6"
@@ -13,12 +13,12 @@
         "doctrine/dbal": "^3.6",
         "friendsofphp/php-cs-fixer": "^3.14",
         "phpstan/phpstan": "^1.9",
-        "symfony/config": "^5.4|^6.0",
-        "symfony/dependency-injection": "^5.4|^6.0",
-        "symfony/event-dispatcher": "^5.4|^6.0",
-        "symfony/framework-bundle": "^5.4|^6.0",
-        "symfony/http-foundation": "^5.4|^6.0",
-        "symfony/http-kernel": "^5.4|^6.0",
+        "symfony/config": "^5.4|^6.0|^7.0@dev",
+        "symfony/dependency-injection": "^5.4|^6.0|^7.0@dev",
+        "symfony/event-dispatcher": "^5.4|^6.0|^7.0@dev",
+        "symfony/framework-bundle": "^5.4|^6.0|^7.0@dev",
+        "symfony/http-foundation": "^5.4|^6.0|^7.0@dev",
+        "symfony/http-kernel": "^5.4|^6.0|^7.0@dev",
         "twig/twig": "^3.7"
     },
     "autoload": {
