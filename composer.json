@@ -11,8 +11,8 @@
     },
     "require-dev": {
         "doctrine/dbal": "^3.6",
-        "friendsofphp/php-cs-fixer": "^3.14",
-        "phpstan/phpstan": "^1.9",
+        "friendsofphp/php-cs-fixer": "^3.40",
+        "phpstan/phpstan": "^1.10",
         "symfony/config": "^5.4|^6.0|^7.0",
         "symfony/dependency-injection": "^5.4|^6.0|^7.0",
         "symfony/event-dispatcher": "^5.4|^6.0|^7.0",
