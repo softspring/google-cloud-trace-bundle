@@ -15,7 +15,7 @@ class EventDispatcherTracerDecorator implements EventDispatcherInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function dispatch(object $event, string $eventName = null): object
+    public function dispatch(object $event, ?string $eventName = null): object
     {
         $span = Tracer::createEventSpan($event, $eventName);
         Tracer::start($span);
@@ -45,7 +45,7 @@ class EventDispatcherTracerDecorator implements EventDispatcherInterface
         $this->eventDispatcher->removeSubscriber($subscriber);
     }
 
-    public function getListeners(string $eventName = null): array
+    public function getListeners(?string $eventName = null): array
     {
         return $this->eventDispatcher->getListeners($eventName);
     }
@@ -55,7 +55,7 @@ class EventDispatcherTracerDecorator implements EventDispatcherInterface
         return $this->eventDispatcher->getListenerPriority($eventName, $listener);
     }
 
-    public function hasListeners(string $eventName = null): bool
+    public function hasListeners(?string $eventName = null): bool
     {
         return $this->eventDispatcher->hasListeners($eventName);
     }

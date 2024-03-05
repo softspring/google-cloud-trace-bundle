@@ -97,7 +97,7 @@ class Tracer
         return $span;
     }
 
-    public static function createEventSpan(object $event, string $eventName = null): ?Span
+    public static function createEventSpan(object $event, ?string $eventName = null): ?Span
     {
         $attributes = [];
         method_exists($event, 'getRequest') && $event->getRequest() instanceof Request && $attributes = array_merge($attributes, self::getRequestAttributes($event->getRequest()));
@@ -106,7 +106,7 @@ class Tracer
         return self::createSpan($eventName ?? get_class($event), $attributes);
     }
 
-    public static function createKernelSpan(string $name, Request $request = null, Response $response = null): ?Span
+    public static function createKernelSpan(string $name, ?Request $request = null, ?Response $response = null): ?Span
     {
         $attributes = [];
         $request && $attributes = array_merge($attributes, self::getRequestAttributes($request));

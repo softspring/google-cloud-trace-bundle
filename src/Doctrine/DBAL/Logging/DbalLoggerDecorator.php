@@ -17,7 +17,7 @@ class DbalLoggerDecorator implements SQLLogger
         $this->logger = $logger;
     }
 
-    public function startQuery($sql, array $params = null, array $types = null): void
+    public function startQuery($sql, ?array $params = null, ?array $types = null): void
     {
         // stop if there is a previous span without stop
         $this->span && Tracer::stop($this->span);
