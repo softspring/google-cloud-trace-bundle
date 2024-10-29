@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/packagist/l/softspring/google-cloud-trace-bundle?style=flat-square)
 ![PHP Version](https://img.shields.io/packagist/dependency-v/softspring/google-cloud-trace-bundle/php?style=flat-square)
 ![Downloads](https://img.shields.io/packagist/dt/softspring/google-cloud-trace-bundle?style=flat-square)
-[![CI](https://img.shields.io/github/actions/workflow/status/softspring/google-cloud-trace-bundle/php.yml?branch=5.4&style=flat-square&label=CI)](https://github.com/softspring/google-cloud-trace-bundle/actions/workflows/php.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/softspring/google-cloud-trace-bundle/ci.yml?branch=5.4&style=flat-square&label=CI)](https://github.com/softspring/google-cloud-trace-bundle/actions/workflows/ci.yml)
 
 This bundle integrates [Google Cloud Trace](https://cloud.google.com/trace) with Symfony.
 
