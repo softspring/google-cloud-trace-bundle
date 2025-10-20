@@ -14,12 +14,12 @@
         "friendsofphp/php-cs-fixer": "^3.68",
         "phpstan/phpstan": "^1.10",
         "rector/rector": "^1.0",
-        "symfony/config": "^5.4|^6.0|^7.0",
-        "symfony/dependency-injection": "^5.4|^6.0|^7.0",
-        "symfony/event-dispatcher": "^5.4|^6.0|^7.0",
-        "symfony/framework-bundle": "^5.4|^6.0|^7.0",
-        "symfony/http-foundation": "^5.4|^6.0|^7.0",
-        "symfony/http-kernel": "^5.4|^6.0|^7.0",
+        "symfony/config": "^6.4|^7.3",
+        "symfony/dependency-injection": "^6.4|^7.3",
+        "symfony/event-dispatcher": "^6.4|^7.3",
+        "symfony/framework-bundle": "^6.4|^7.3",
+        "symfony/http-foundation": "^6.4|^7.3",
+        "symfony/http-kernel": "^6.4|^7.3",
         "twig/twig": "^3.7"
     },
     "autoload": {
