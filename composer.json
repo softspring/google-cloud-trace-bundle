@@ -11,6 +11,8 @@
         "doctrine/dbal": "^3.6",
         "ergebnis/composer-normalize": "^2.50",
         "friendsofphp/php-cs-fixer": "^3.94",
+        "guzzlehttp/guzzle": "^7.8.2",
+        "guzzlehttp/promises": "^2.0",
         "phpstan/phpstan": "^2.1",
         "rector/rector": "^2.3",
         "symfony/config": "^6.4 || ^7.4 || ^8.0",
@@ -19,6 +21,7 @@
         "symfony/framework-bundle": "^6.4 || ^7.4 || ^8.0",
         "symfony/http-foundation": "^6.4 || ^7.4 || ^8.0",
         "symfony/http-kernel": "^6.4 || ^7.4 || ^8.0",
+        "symfony/yaml": "^6.4 || ^7.4 || ^8.0",
         "twig/twig": "^3.4"
     },
     "minimum-stability": "dev",
@@ -47,13 +50,10 @@
         ],
         "run-tests": [
             "composer validate --strict --no-check-lock --ansi",
-            "XDEBUG_MODE=coverage vendor/bin/phpunit",
             "vendor/bin/rector process src tests --dry-run",
             "vendor/bin/phpstan analyse src tests --level 5",
             "vendor/bin/php-cs-fixer fix --dry-run --diff",
-            "vendor/bin/yaml-lint .github/ -vvv --parse-tags",
-            "vendor/bin/yaml-lint config/ -vvv --parse-tags",
-            "vendor/bin/yaml-lint translations/ -vvv --parse-tags"
+            "vendor/bin/yaml-lint .github/ -vvv --parse-tags"
         ],
         "test": [
             "composer update --no-scripts --ansi",

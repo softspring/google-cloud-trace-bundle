@@ -13,7 +13,9 @@ trait TraceKernelTrait
 
     public function boot(): void
     {
-        isset($_SERVER['REQUEST_URI']) && Tracer::start($this->serverSpan = Tracer::createServerSpan($_SERVER['REQUEST_URI']));
+        if (isset($_SERVER['REQUEST_URI'])) {
+            Tracer::start($this->serverSpan = Tracer::createServerSpan($_SERVER['REQUEST_URI']));
+        }
         Tracer::start($span = Tracer::createKernelSpan('kernel.boot'));
         parent::boot();
         Tracer::stop($span);

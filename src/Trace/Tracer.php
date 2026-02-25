@@ -17,7 +17,7 @@ class Tracer
 
     public static function send(): void
     {
-        if (!self::$traceClient) {
+        if (!self::$traceClient instanceof TraceClient) {
             return;
         }
 
@@ -34,20 +34,20 @@ class Tracer
 
     public static function start(?Span $span): ?Span
     {
-        if (!$span) {
+        if (!$span instanceof Span) {
             return null;
         }
 
-        sizeof(self::$parentSpanStack) && $span->setParentSpanId(end(self::$parentSpanStack));
+        count(self::$parentSpanStack) && $span->setParentSpanId(end(self::$parentSpanStack));
         $span->setStartTime();
-        array_push(self::$parentSpanStack, $span->spanId());
+        self::$parentSpanStack[] = $span->spanId();
 
         return $span;
     }
 
     public static function stop(?Span $span): ?Span
     {
-        if (!$span) {
+        if (!$span instanceof Span) {
             return null;
         }
 
@@ -60,7 +60,7 @@ class Tracer
 
     protected static function initTrace(): void
     {
-        if (self::$trace) {
+        if (self::$trace instanceof Trace) {
             return; // also init
         }
 
@@ -68,12 +68,12 @@ class Tracer
             return; // do not init
         }
 
-        if (!self::$traceClient) {
+        if (!self::$traceClient instanceof TraceClient) {
             self::$traceClient = new TraceClient();
         }
 
         $traceId = explode('-', $_SERVER['HTTP_TRACEPARENT'])[1];
-        array_push(self::$parentSpanStack, explode('-', $_SERVER['HTTP_TRACEPARENT'])[2]); // comment to ignore main span
+        self::$parentSpanStack[] = explode('-', $_SERVER['HTTP_TRACEPARENT'])[2]; // comment to ignore main span
 
         self::$trace = self::$traceClient->trace($traceId);
     }
@@ -82,7 +82,7 @@ class Tracer
     {
         self::initTrace();
 
-        if (!self::$traceClient) {
+        if (!self::$traceClient instanceof TraceClient) {
             return null;
         }
 
@@ -100,8 +100,12 @@ class Tracer
     public static function createEventSpan(object $event, ?string $eventName = null): ?Span
     {
         $attributes = [];
-        method_exists($event, 'getRequest') && $event->getRequest() instanceof Request && $attributes = array_merge($attributes, self::getRequestAttributes($event->getRequest()));
-        method_exists($event, 'getResponse') && $event->getResponse() instanceof Response && $attributes = array_merge($attributes, self::getResponseAttributes($event->getResponse()));
+        if (method_exists($event, 'getRequest') && $event->getRequest() instanceof Request) {
+            $attributes = array_merge($attributes, self::getRequestAttributes($event->getRequest()));
+        }
+        if (method_exists($event, 'getResponse') && $event->getResponse() instanceof Response) {
+            $attributes = array_merge($attributes, self::getResponseAttributes($event->getResponse()));
+        }
 
         return self::createSpan($eventName ?? get_class($event), $attributes);
     }
@@ -156,7 +160,7 @@ class Tracer
 
     protected static function getResponseAttributes(?Response $response): array
     {
-        if (!$response) {
+        if (!$response instanceof Response) {
             return [];
         }
 
@@ -176,8 +180,12 @@ class Tracer
         $response->getDate() && $attributes['/response/date'] = $response->getDate()->format('Y-m-d H:i:s');
         $response->getLastModified() && $attributes['/response/last_modified'] = $response->getLastModified()->format('Y-m-d H:i:s');
         $response->getTtl() && $attributes['/response/ttl'] = $response->getTtl();
-        $response->headers->hasCacheControlDirective('max-age') && $attributes['/response/max_age'] = $response->headers->getCacheControlDirective('max-age');
-        $response->headers->hasCacheControlDirective('s-maxage') && $attributes['/response/s_maxage'] = $response->headers->getCacheControlDirective('s-maxage');
+        if ($response->headers->hasCacheControlDirective('max-age')) {
+            $attributes['/response/max_age'] = $response->headers->getCacheControlDirective('max-age');
+        }
+        if ($response->headers->hasCacheControlDirective('s-maxage')) {
+            $attributes['/response/s_maxage'] = $response->headers->getCacheControlDirective('s-maxage');
+        }
 
         return $attributes;
     }
