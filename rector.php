@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
 use Rector\Set\ValueObject\SetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\ValueObject\PhpVersion;
@@ -20,4 +21,9 @@ return RectorConfig::configure()
     ])
     ->withImportNames()
     ->withPhpVersion(PhpVersion::PHP_84)
-    ->withComposerBased(symfony: true);
+    ->withComposerBased(symfony: true)
+    ->withSkip([
+        RemoveParentCallWithoutParentRector::class => [
+            __DIR__.'/src/Middleware/ConnectionTracerMiddleware.php',
+        ],
+    ]);

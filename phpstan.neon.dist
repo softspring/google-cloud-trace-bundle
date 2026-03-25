@@ -3,9 +3,16 @@ includes:
 
 parameters:
     level: 5
+    reportUnmatchedIgnoredErrors: false
     paths:
         - src/
     bootstrapFiles:
         - vendor/autoload.php
     ignoreErrors:
         - identifier: trait.unused
+        -
+            path: src/Middleware/ConnectionTracerMiddleware.php
+            message: '#ConnectionTracerMiddleware::query\(\) calls parent::query\(\) but .* does not extend any class#'
+        -
+            path: src/Middleware/ConnectionTracerMiddleware.php
+            message: '#ConnectionTracerMiddleware::exec\(\) calls parent::exec\(\) but .* does not extend any class#'
