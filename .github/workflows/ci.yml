@@ -18,13 +18,13 @@ jobs:
                 composer-prefer: [ '', '--prefer-lowest' ]
 
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v4
 
             -   name: Install PHP
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php-versions }}
-                    #                  extensions: intl #optional
+                    coverage: xdebug
                     ini-values: "post_max_size=256M" #optional
 
             -   name: Check PHP Version
@@ -48,16 +48,17 @@ jobs:
             -   name: Run phpstan
                 run: ./vendor/bin/phpstan analyse
 
-#            -   name: Run tests
-#                run: ./vendor/bin/phpunit --coverage-text --coverage-html=.phpunit.cache/html-report
+            -   name: Run rector
+                run: ./vendor/bin/rector process src tests --dry-run
+
+            -   name: Run tests
+                run: XDEBUG_MODE=coverage ./vendor/bin/phpunit
 
             -   name: Code Style check
                 run: ./vendor/bin/php-cs-fixer fix -v --diff --dry-run
 
-#            -   name: phpunit-coverage-badge
-#                uses: timkrase/phpunit-coverage-badge@v1.2.1
-#                with:
-#                    push_badge: true
-#                    coverage_badge_path: .github/badges/coverage.svg
-#                    repo_token: ${{ secrets.GITHUB_TOKEN }}
-
+            -   name: Upload coverage to Codecov
+                uses: codecov/codecov-action@v5
+                with:
+                    files: clover.xml
+                    token: ${{ secrets.CODECOV_TOKEN }}
