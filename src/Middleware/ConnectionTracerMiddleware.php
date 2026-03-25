@@ -25,31 +25,4 @@ class ConnectionTracerMiddleware extends AbstractConnectionMiddleware
 
         return $result;
     }
-
-    public function beginTransaction(): bool
-    {
-        Tracer::start($span = Tracer::createSpan('doctrine.beginTransaction'));
-        $result = parent::beginTransaction();
-        Tracer::stop($span);
-
-        return $result;
-    }
-
-    public function commit(): bool
-    {
-        Tracer::start($span = Tracer::createSpan('doctrine.commit'));
-        $result = parent::commit();
-        Tracer::stop($span);
-
-        return $result;
-    }
-
-    public function rollBack(): bool
-    {
-        Tracer::start($span = Tracer::createSpan('doctrine.rollBack'));
-        $result = parent::rollBack();
-        Tracer::stop($span);
-
-        return $result;
-    }
 }

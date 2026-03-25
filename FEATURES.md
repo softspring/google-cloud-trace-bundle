@@ -38,7 +38,7 @@ This file defines the expected behavior and functional scope of the component. I
 - Event dispatching
 - Twig template rendering
 - Symfony HttpCache handling and termination
-- Doctrine DBAL query and transaction operations
+- Doctrine DBAL query activity and related low-level DBAL operations
 
 ## Integration Expectations
 

@@ -2,23 +2,26 @@
 
 namespace Softspring\GoogleCloudTraceBundle\Doctrine\DBAL\Logging;
 
-use Doctrine\DBAL\Logging\SQLLogger;
 use Google\Cloud\Trace\Span;
 use Softspring\GoogleCloudTraceBundle\Trace\Tracer;
 
-class DbalLoggerDecorator implements SQLLogger
+class DbalLoggerDecorator
 {
-    protected SQLLogger $logger;
+    protected object $logger;
 
     protected ?Span $span = null;
 
-    public function __construct(SQLLogger $logger)
+    public function __construct(object $logger)
     {
         $this->logger = $logger;
     }
 
     public function startQuery($sql, ?array $params = null, ?array $types = null): void
     {
+        if (!method_exists($this->logger, 'startQuery')) {
+            return;
+        }
+
         // stop if there is a previous span without stop
         $this->span && Tracer::stop($this->span);
 
@@ -30,6 +33,10 @@ class DbalLoggerDecorator implements SQLLogger
 
     public function stopQuery(): void
     {
+        if (!method_exists($this->logger, 'stopQuery')) {
+            return;
+        }
+
         Tracer::stop($this->span);
         $this->span = null;
         $this->logger->stopQuery();
