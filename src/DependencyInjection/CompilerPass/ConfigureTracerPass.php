@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Softspring\GoogleCloudTraceBundle\DependencyInjection\CompilerPass;
 
 use Doctrine\DBAL\Driver\Middleware;

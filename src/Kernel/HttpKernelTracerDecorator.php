@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Softspring\GoogleCloudTraceBundle\Kernel;
 
 use Softspring\GoogleCloudTraceBundle\Trace\Tracer;
