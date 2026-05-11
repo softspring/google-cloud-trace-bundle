@@ -18,7 +18,7 @@ jobs:
                 composer-prefer: [ '', '--prefer-lowest' ]
 
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
 
             -   name: Install PHP
                 uses: shivammathur/setup-php@v2
@@ -58,7 +58,7 @@ jobs:
                 run: ./vendor/bin/php-cs-fixer fix -v --diff --dry-run
 
             -   name: Upload coverage to Codecov
-                uses: codecov/codecov-action@v5
+                uses: codecov/codecov-action@v6
                 with:
                     files: clover.xml
                     token: ${{ secrets.CODECOV_TOKEN }}
