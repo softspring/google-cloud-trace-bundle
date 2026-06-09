@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class ConfigureTracerPassTest extends TestCase
 {
-    public function testProcessRegistersKernelAndEventDispatcherDecorators(): void
+    public function testProcessRegistersOnlyKernelDecoratorByDefault(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('http_kernel', new Definition(stdClass::class));
@@ -24,26 +24,30 @@ class ConfigureTracerPassTest extends TestCase
         (new ConfigureTracerPass())->process($container);
 
         self::assertTrue($container->hasDefinition('sfs_gcloud_tracer.http_kernel'));
-        self::assertTrue($container->hasDefinition('sfs_gcloud_tracer.event_dispatcher'));
+        self::assertFalse($container->hasDefinition('sfs_gcloud_tracer.event_dispatcher'));
 
         $kernelDefinition = $container->getDefinition('sfs_gcloud_tracer.http_kernel');
         self::assertSame(HttpKernelTracerDecorator::class, $kernelDefinition->getClass());
         self::assertSame('http_kernel', $kernelDefinition->getDecoratedService()[0]);
-
-        $dispatcherDefinition = $container->getDefinition('sfs_gcloud_tracer.event_dispatcher');
-        self::assertSame(EventDispatcherTracerDecorator::class, $dispatcherDefinition->getClass());
-        self::assertSame('event_dispatcher', $dispatcherDefinition->getDecoratedService()[0]);
     }
 
-    public function testProcessChangesTwigAndHttpCacheClassesWhenPresent(): void
+    public function testProcessCanRegisterOptionalDecorators(): void
     {
         $container = new ContainerBuilder();
+        $container->setParameter('sfs_google_cloud_trace.instrumentation.event_dispatcher', true);
+        $container->setParameter('sfs_google_cloud_trace.instrumentation.twig', true);
+        $container->setParameter('sfs_google_cloud_trace.instrumentation.http_cache', true);
         $container->setDefinition('http_kernel', new Definition(stdClass::class));
         $container->setDefinition('event_dispatcher', new Definition(stdClass::class));
         $container->setDefinition('twig', new Definition(stdClass::class));
         $container->setDefinition('http_cache', new Definition(stdClass::class));
 
         (new ConfigureTracerPass())->process($container);
+
+        self::assertTrue($container->hasDefinition('sfs_gcloud_tracer.event_dispatcher'));
+        $dispatcherDefinition = $container->getDefinition('sfs_gcloud_tracer.event_dispatcher');
+        self::assertSame(EventDispatcherTracerDecorator::class, $dispatcherDefinition->getClass());
+        self::assertSame('event_dispatcher', $dispatcherDefinition->getDecoratedService()[0]);
 
         self::assertSame(EnvironmentTracer::class, $container->getDefinition('twig')->getClass());
         self::assertSame(HttpCacheTracer::class, $container->getDefinition('http_cache')->getClass());
@@ -52,8 +56,8 @@ class ConfigureTracerPassTest extends TestCase
     public function testProcessAddsDoctrineIntegration(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('http_kernel', new Definition(stdClass::class));
-        $container->setDefinition('event_dispatcher', new Definition(stdClass::class));
+        $container->setParameter('sfs_google_cloud_trace.instrumentation.doctrine', true);
+        $container->setParameter('sfs_google_cloud_trace.doctrine.include_sql', true);
         $container->setDefinition('doctrine', new Definition(stdClass::class));
         $container->setDefinition('doctrine.dbal.logger', new Definition(stdClass::class));
 
@@ -65,6 +69,10 @@ class ConfigureTracerPassTest extends TestCase
                 'doctrine.middleware',
                 $container->getDefinition('sfs_gcloud_tracer.doctrine.dbal.connection_tracer_middleware')->getTag('doctrine.middleware')[0]['name'] ?? 'doctrine.middleware'
             );
+            self::assertSame(
+                [['setIncludeSql', [true]]],
+                $container->getDefinition('sfs_gcloud_tracer.doctrine.dbal.connection_tracer_middleware')->getMethodCalls()
+            );
         } else {
             self::assertTrue($container->hasDefinition('sfs_gcloud_tracer.doctrine.dbal.logger_decorator'));
             self::assertSame(
@@ -72,5 +80,16 @@ class ConfigureTracerPassTest extends TestCase
                 $container->getDefinition('sfs_gcloud_tracer.doctrine.dbal.logger_decorator')->getDecoratedService()[0]
             );
         }
+    }
+
+    public function testProcessDoesNothingWhenTracingIsDisabled(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('sfs_google_cloud_trace.enabled', false);
+        $container->setDefinition('http_kernel', new Definition(stdClass::class));
+
+        (new ConfigureTracerPass())->process($container);
+
+        self::assertFalse($container->hasDefinition('sfs_gcloud_tracer.http_kernel'));
     }
 }

@@ -24,17 +24,23 @@ class HttpKernelTracerDecorator implements HttpKernelInterface, TerminableInterf
     {
         Tracer::start($requestSpan = Tracer::createKernelSpan($request->getPathInfo(), $request));
         Tracer::start($handleSpan = Tracer::createKernelSpan('kernel.handle', $request));
-        $response = $this->kernel->handle($request, $type, $catch);
-        Tracer::stop($handleSpan);
-        Tracer::stop($requestSpan);
 
-        return $response;
+        try {
+            return $this->kernel->handle($request, $type, $catch);
+        } finally {
+            Tracer::stop($handleSpan);
+            Tracer::stop($requestSpan);
+        }
     }
 
     public function terminate(Request $request, Response $response): void
     {
         Tracer::start($span = Tracer::createKernelSpan('kernel.terminate', $request, $response));
-        $this->kernel->terminate($request, $response);
-        Tracer::stop($span);
+
+        try {
+            $this->kernel->terminate($request, $response);
+        } finally {
+            Tracer::stop($span);
+        }
     }
 }

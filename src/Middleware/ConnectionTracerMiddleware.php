@@ -9,22 +9,38 @@ use Softspring\GoogleCloudTraceBundle\Trace\Tracer;
 if (class_exists(AbstractConnectionMiddleware::class)) {
     class ConnectionTracerMiddleware extends AbstractConnectionMiddleware
     {
+        private bool $includeSql = false;
+
+        public function setIncludeSql(bool $includeSql): void
+        {
+            $this->includeSql = $includeSql;
+        }
+
         public function query(string $sql): Result
         {
-            Tracer::start($span = Tracer::createSpan('doctrine.query', ['sql' => $sql]));
-            $result = parent::query($sql);
-            Tracer::stop($span);
+            Tracer::start($span = Tracer::createSpan('doctrine.query', $this->sqlAttributes($sql)));
 
-            return $result;
+            try {
+                return parent::query($sql);
+            } finally {
+                Tracer::stop($span);
+            }
         }
 
         public function exec(string $sql): int
         {
-            Tracer::start($span = Tracer::createSpan('doctrine.exec', ['sql' => $sql]));
-            $result = parent::exec($sql);
-            Tracer::stop($span);
+            Tracer::start($span = Tracer::createSpan('doctrine.exec', $this->sqlAttributes($sql)));
 
-            return $result;
+            try {
+                return parent::exec($sql);
+            } finally {
+                Tracer::stop($span);
+            }
+        }
+
+        private function sqlAttributes(string $sql): array
+        {
+            return $this->includeSql ? ['sql' => $sql] : [];
         }
     }
 } else {

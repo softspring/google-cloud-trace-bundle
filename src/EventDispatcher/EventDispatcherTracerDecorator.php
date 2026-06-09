@@ -19,10 +19,12 @@ class EventDispatcherTracerDecorator implements EventDispatcherInterface
     {
         $span = Tracer::createEventSpan($event, $eventName);
         Tracer::start($span);
-        $return = $this->eventDispatcher->dispatch($event, $eventName);
-        Tracer::stop($span);
 
-        return $return;
+        try {
+            return $this->eventDispatcher->dispatch($event, $eventName);
+        } finally {
+            Tracer::stop($span);
+        }
     }
 
     public function addListener(string $eventName, $listener, int $priority = 0): void

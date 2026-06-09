@@ -10,6 +10,25 @@
 
 This bundle sends Symfony request traces to Google Cloud Trace.
 
+By default, it traces the main Symfony kernel flow only. More detailed instrumentation is opt-in to avoid adding noisy spans or unnecessary runtime overhead in production.
+
+## Configuration
+
+```yaml
+sfs_google_cloud_trace:
+    enabled: true
+    instrumentation:
+        kernel: true
+        event_dispatcher: false
+        twig: false
+        doctrine: false
+        http_cache: false
+    doctrine:
+        include_sql: false
+```
+
+Enable `twig`, `event_dispatcher`, `doctrine`, or `http_cache` only when that detail is useful for the application. Keep `doctrine.include_sql` disabled unless query text is needed and safe to send to Google Cloud Trace.
+
 ## Armonic
 
 This package is part of [Armonic](https://softspring.es/en/armonic).

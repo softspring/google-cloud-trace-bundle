@@ -17,14 +17,21 @@ trait TraceKernelTrait
             Tracer::start($this->serverSpan = Tracer::createServerSpan($_SERVER['REQUEST_URI']));
         }
         Tracer::start($span = Tracer::createKernelSpan('kernel.boot'));
-        parent::boot();
-        Tracer::stop($span);
+
+        try {
+            parent::boot();
+        } finally {
+            Tracer::stop($span);
+        }
     }
 
     public function terminate(Request $request, Response $response): void
     {
-        parent::terminate($request, $response);
-        Tracer::stop($this->serverSpan);
-        Tracer::send();
+        try {
+            parent::terminate($request, $response);
+        } finally {
+            Tracer::stop($this->serverSpan);
+            Tracer::send();
+        }
     }
 }

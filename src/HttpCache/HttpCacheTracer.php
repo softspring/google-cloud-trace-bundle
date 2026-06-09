@@ -16,17 +16,23 @@ class HttpCacheTracer extends HttpCache
     {
         Tracer::start($requestSpan = Tracer::createKernelSpan($request->getPathInfo(), $request));
         Tracer::start($handleSpan = Tracer::createKernelSpan('kernel_cache.handle', $request));
-        $response = parent::handle($request, $type, $catch);
-        Tracer::stop($handleSpan);
-        Tracer::stop($requestSpan);
 
-        return $response;
+        try {
+            return parent::handle($request, $type, $catch);
+        } finally {
+            Tracer::stop($handleSpan);
+            Tracer::stop($requestSpan);
+        }
     }
 
     public function terminate(Request $request, Response $response): void
     {
         Tracer::start($span = Tracer::createKernelSpan('kernel_cache.terminate', $request, $response));
-        parent::terminate($request, $response);
-        Tracer::stop($span);
+
+        try {
+            parent::terminate($request, $response);
+        } finally {
+            Tracer::stop($span);
+        }
     }
 }

@@ -13,9 +13,16 @@ if (interface_exists(SQLLogger::class)) {
 
         protected ?Span $span = null;
 
+        private bool $includeSql = false;
+
         public function __construct(object $logger)
         {
             $this->logger = $logger;
+        }
+
+        public function setIncludeSql(bool $includeSql): void
+        {
+            $this->includeSql = $includeSql;
         }
 
         public function startQuery($sql, ?array $params = null, ?array $types = null): void
@@ -27,7 +34,7 @@ if (interface_exists(SQLLogger::class)) {
             // stop if there is a previous span without stop
             $this->span && Tracer::stop($this->span);
 
-            $this->span = Tracer::createSpan('doctrine.query', ['sql' => $sql]);
+            $this->span = Tracer::createSpan('doctrine.query', $this->sqlAttributes((string) $sql));
             Tracer::start($this->span);
 
             $this->logger->startQuery($sql, $params, $types);
@@ -43,6 +50,11 @@ if (interface_exists(SQLLogger::class)) {
             $this->span = null;
             $this->logger->stopQuery();
         }
+
+        private function sqlAttributes(string $sql): array
+        {
+            return $this->includeSql ? ['sql' => $sql] : [];
+        }
     }
 } else {
     class DbalLoggerDecorator
@@ -51,9 +63,16 @@ if (interface_exists(SQLLogger::class)) {
 
         protected ?Span $span = null;
 
+        private bool $includeSql = false;
+
         public function __construct(object $logger)
         {
             $this->logger = $logger;
+        }
+
+        public function setIncludeSql(bool $includeSql): void
+        {
+            $this->includeSql = $includeSql;
         }
 
         public function startQuery($sql, ?array $params = null, ?array $types = null): void
@@ -64,7 +83,7 @@ if (interface_exists(SQLLogger::class)) {
 
             $this->span && Tracer::stop($this->span);
 
-            $this->span = Tracer::createSpan('doctrine.query', ['sql' => $sql]);
+            $this->span = Tracer::createSpan('doctrine.query', $this->sqlAttributes((string) $sql));
             Tracer::start($this->span);
 
             $this->logger->startQuery($sql, $params, $types);
@@ -79,6 +98,11 @@ if (interface_exists(SQLLogger::class)) {
             Tracer::stop($this->span);
             $this->span = null;
             $this->logger->stopQuery();
+        }
+
+        private function sqlAttributes(string $sql): array
+        {
+            return $this->includeSql ? ['sql' => $sql] : [];
         }
     }
 }

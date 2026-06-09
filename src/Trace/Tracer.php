@@ -68,12 +68,17 @@ class Tracer
             return; // do not init
         }
 
+        $traceparent = explode('-', $_SERVER['HTTP_TRACEPARENT']);
+        if (4 !== count($traceparent) || '01' !== $traceparent[3]) {
+            return; // do not trace unsampled requests
+        }
+
         if (!self::$traceClient instanceof TraceClient) {
             self::$traceClient = new TraceClient();
         }
 
-        $traceId = explode('-', $_SERVER['HTTP_TRACEPARENT'])[1];
-        self::$parentSpanStack[] = explode('-', $_SERVER['HTTP_TRACEPARENT'])[2]; // comment to ignore main span
+        $traceId = $traceparent[1];
+        self::$parentSpanStack[] = $traceparent[2]; // comment to ignore main span
 
         self::$trace = self::$traceClient->trace($traceId);
     }
