@@ -32,7 +32,9 @@ if (interface_exists(SQLLogger::class)) {
             }
 
             // stop if there is a previous span without stop
-            $this->span && Tracer::stop($this->span);
+            if ($this->span instanceof Span) {
+                Tracer::stop($this->span);
+            }
 
             $this->span = Tracer::createSpan('doctrine.query', $this->sqlAttributes((string) $sql));
             Tracer::start($this->span);
@@ -81,7 +83,9 @@ if (interface_exists(SQLLogger::class)) {
                 return;
             }
 
-            $this->span && Tracer::stop($this->span);
+            if ($this->span instanceof Span) {
+                Tracer::stop($this->span);
+            }
 
             $this->span = Tracer::createSpan('doctrine.query', $this->sqlAttributes((string) $sql));
             Tracer::start($this->span);
